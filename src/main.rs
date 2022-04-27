@@ -11,16 +11,16 @@ fn setup() {
     let home = dirs::home_dir().unwrap();
     let mut prof_path = home.clone();
     prof_path.push(".profile");
-    let mut phphp_path = home;
-    phphp_path.push(".phphp");
+    let mut phen_path = home;
+    phen_path.push(".phen");
     let mut r = File::create(prof_path).unwrap();
-    let _ = std::fs::create_dir_all(&phphp_path).unwrap();
+    let _ = std::fs::create_dir_all(&phen_path).unwrap();
     let prof_content = match str::from_utf8(&buf) {
         Ok(v) => v,
         Err(_) => panic!("Invalid UTF8 profile"),
     };
-    let new_prof = prof_content.to_string()
-        + &format!("\nPATH=\"{}:$PATH\"\n", phphp_path.as_path().display());
+    let new_prof =
+        prof_content.to_string() + &format!("\nPATH=\"{}:$PATH\"\n", phen_path.as_path().display());
     File::write(&mut r, new_prof.as_bytes()).expect("setup failed");
     println!("{}", prof_content);
 }
@@ -31,8 +31,8 @@ async fn install(version: &str) {
         panic!("Unexpected version format provided: {}", version);
     }
     let home = dirs::home_dir().unwrap();
-    let phphp_path = home.join(".phphp");
-    // if Path::new(phphp_path.as_path()).is_dir() {
+    let phen_path = home.join(".phen");
+    // if Path::new(phen_path.as_path()).is_dir() {
     //     panic!(
     //         "It looks like {} may already be installed, attempt clean up?",
     //         version
@@ -44,8 +44,8 @@ async fn install(version: &str) {
         .await
         .unwrap_or_else(|_| panic!("Could not find {} via php.net releases", version));
     let content = response.text().await.unwrap();
-    let tmp_dir = phphp_path.join("tmp");
-    let install_dir = phphp_path.join("lib");
+    let tmp_dir = phen_path.join("tmp");
+    let install_dir = phen_path.join("lib");
     let _ = std::fs::create_dir(install_dir.as_path());
     let tmp_path = tmp_dir.join(format!("php-{}.tar.gz", version));
     let _ = std::fs::create_dir_all(tmp_dir);
@@ -67,11 +67,14 @@ async fn install(version: &str) {
         .output()
         .expect("failed to handle tar");
     let _ = std::fs::remove_file(&tmp_path).expect("failed to remove tmp file");
+    todo!("compile");
 }
+
+async fn compile(version: &str) {}
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    let matches = Command::new("phphp")
+    let matches = Command::new("phen")
         .about("php version manager")
         .version("0.1.0")
         .subcommand_required(true)
