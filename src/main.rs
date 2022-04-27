@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::{Error, Read, Write};
+use std::path::PathBuf;
 use std::str;
 extern crate dirs;
 
@@ -9,10 +10,10 @@ use regex::Regex;
 
 struct Conf {
     version: String,
-    phen_path: std::path::PathBuf,
-    prof_path: std::path::PathBuf,
-    install_dir: std::path::PathBuf,
-    tmp_dir: std::path::PathBuf,
+    phen_path: PathBuf,
+    prof_path: PathBuf,
+    install_dir: PathBuf,
+    tmp_dir: PathBuf,
 }
 
 impl Conf {
